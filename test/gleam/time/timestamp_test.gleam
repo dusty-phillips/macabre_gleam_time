@@ -126,6 +126,67 @@ pub fn add_4_test() {
     == timestamp.from_unix_seconds_and_nanoseconds(0, -999_999_999)
 }
 
+pub fn subtract_property_0_test() {
+  use #(x, y) <- qcheck.given(qcheck.tuple2(
+    qcheck.uniform_int(),
+    qcheck.uniform_int(),
+  ))
+  let expected = timestamp.from_unix_seconds_and_nanoseconds(0, x - y)
+  let actual =
+    timestamp.from_unix_seconds_and_nanoseconds(0, x)
+    |> timestamp.subtract(duration.nanoseconds(y))
+  assert expected == actual
+}
+
+pub fn subtract_property_1_test() {
+  use #(x, y) <- qcheck.given(qcheck.tuple2(
+    qcheck.uniform_int(),
+    qcheck.uniform_int(),
+  ))
+  let expected = timestamp.from_unix_seconds_and_nanoseconds(x - y, 0)
+  let actual =
+    timestamp.from_unix_seconds_and_nanoseconds(x, 0)
+    |> timestamp.subtract(duration.seconds(y))
+  assert expected == actual
+}
+
+pub fn subtract_0_test() {
+  assert timestamp.subtract(timestamp.from_unix_seconds(0), duration.seconds(1))
+    == timestamp.from_unix_seconds(-1)
+}
+
+pub fn subtract_1_test() {
+  assert timestamp.subtract(
+      timestamp.from_unix_seconds(100),
+      duration.seconds(-1),
+    )
+    == timestamp.from_unix_seconds(101)
+}
+
+pub fn subtract_2_test() {
+  assert timestamp.subtract(
+      timestamp.from_unix_seconds(99),
+      duration.nanoseconds(100),
+    )
+    == timestamp.from_unix_seconds_and_nanoseconds(98, 999_999_900)
+}
+
+pub fn subtract_3_test() {
+  assert timestamp.subtract(
+      timestamp.from_unix_seconds_and_nanoseconds(0, -1),
+      duration.nanoseconds(-1_000_000_000),
+    )
+    == timestamp.from_unix_seconds_and_nanoseconds(0, 999_999_999)
+}
+
+pub fn subtract_4_test() {
+  assert timestamp.subtract(
+      timestamp.from_unix_seconds_and_nanoseconds(0, 1),
+      duration.nanoseconds(-1_000_000_000),
+    )
+    == timestamp.from_unix_seconds_and_nanoseconds(1, 1)
+}
+
 pub fn to_unix_seconds_0_test() {
   assert timestamp.to_unix_seconds(timestamp.from_unix_seconds_and_nanoseconds(
       1,

@@ -198,6 +198,21 @@ pub fn add(timestamp: Timestamp, duration: Duration) -> Timestamp {
   |> normalise
 }
 
+/// Subtract a duration from a timestamp.
+///
+/// # Examples
+///
+/// ```gleam
+/// subtract(from_unix_seconds(1000), duration.seconds(5))
+/// // -> from_unix_seconds(955)
+/// ```
+/// 
+pub fn subtract(timestamp: Timestamp, duration: Duration) -> Timestamp {
+  let #(seconds, nanoseconds) = duration.to_seconds_and_nanoseconds(duration)
+  Timestamp(timestamp.seconds - seconds, timestamp.nanoseconds - nanoseconds)
+  |> normalise
+}
+
 /// Convert a timestamp to a RFC 3339 formatted time string, with an offset
 /// supplied as an additional argument.
 ///
