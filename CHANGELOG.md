@@ -1,9 +1,9 @@
 # Changelog
 
-## Unreleased
- 
+## v1.8.0 - 2026-03-26
+
 - The `timestamp` module gains the `subtract` function.
- 
+
 ## v1.7.0 - 2026-01-19
 
 - The `duration` module gains the `to_milliseconds` function.
