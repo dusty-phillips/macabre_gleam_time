@@ -148,8 +148,7 @@ pub fn local_offset() -> duration.Duration {
   duration.seconds(local_time_offset_seconds())
 }
 
-@external(erlang, "gleam_time_ffi", "local_time_offset_seconds")
-@external(javascript, "../../gleam_time_ffi.mjs", "local_time_offset_seconds")
+@external(python, "gleam.time.time_bindings", "local_time_offset_seconds")
 fn local_time_offset_seconds() -> Int
 
 /// Returns the English name for a month.

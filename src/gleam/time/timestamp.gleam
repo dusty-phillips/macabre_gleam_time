@@ -1,14 +1,9 @@
 //// Welcome to the timestamp module! This module and its `Timestamp` type are
 //// what you will be using most commonly when working with time in Gleam.
 ////
-//// A timestamp represents an exact moment in time, with nanosecond precision.
-//// It is unambiguous as it does not need time-zone information, and it is
-//// fast and efficient to work with.
-////
-//// Timestamps are internally represented as the duration from a fixed point
-//// in time, making it an _epoch_ time system. Other widely used epoch time
-//// systems include GPS time, Windows filetime, Unix time, NTP time, and
-//// PostgreSQL time.
+//// A timestamp represents a moment in time, represented as an amount of time
+//// since the calendar time 00:00:00 UTC on 1 January 1970, also known as the
+//// _Unix epoch_.
 ////
 //// # Wall clock time and monotonicity
 ////
@@ -167,8 +162,7 @@ pub fn system_time() -> Timestamp {
   normalise(Timestamp(seconds, nanoseconds))
 }
 
-@external(erlang, "gleam_time_ffi", "system_time")
-@external(javascript, "../../gleam_time_ffi.mjs", "system_time")
+@external(python, "gleam.time.time_bindings", "system_time")
 fn get_system_time() -> #(Int, Int)
 
 /// Calculate the difference between two timestamps.
@@ -779,10 +773,7 @@ fn do_parse_digits(
 
 /// Accept the given value from `bytes` and move past it if found.
 /// 
-fn accept_byte(
-  from bytes: BitArray,
-  value value: Int,
-) -> Result(BitArray, Nil) {
+fn accept_byte(from bytes: BitArray, value value: Int) -> Result(BitArray, Nil) {
   case bytes {
     <<byte, remaining_bytes:bytes>> if byte == value -> Ok(remaining_bytes)
     _ -> Error(Nil)
