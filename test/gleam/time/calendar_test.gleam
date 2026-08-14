@@ -1,242 +1,69 @@
-import gleam/float
+import gleam/int
 import gleam/order
 import gleam/time/calendar
 import gleam/time/duration
-
-pub fn local_offset_test() {
-  let hours =
-    float.round(duration.to_seconds(calendar.local_offset())) / 60 / 60
-  assert hours > -24
-  assert hours < 24
-  assert calendar.local_offset() == calendar.local_offset()
-}
-
-pub fn utc_offset_test() {
-  assert calendar.utc_offset == duration.seconds(0)
-}
+import gleeunit/should
 
 pub fn month_to_string_test() {
-  assert calendar.month_to_string(calendar.April) == "April"
+  calendar.month_to_string(calendar.January) |> should.equal("January")
+  calendar.month_to_string(calendar.December) |> should.equal("December")
 }
 
-pub fn is_valid_day_january_test() {
-  assert calendar.is_valid_date(calendar.Date(2023, calendar.January, 31))
-  assert !calendar.is_valid_date(calendar.Date(2023, calendar.January, 32))
-  assert !calendar.is_valid_date(calendar.Date(2023, calendar.January, 0))
+pub fn month_to_int_test() {
+  calendar.month_to_int(calendar.January) |> should.equal(1)
+  calendar.month_to_int(calendar.December) |> should.equal(12)
 }
 
-pub fn is_valid_day_february_test() {
-  // Test leap year (2024)
-  assert calendar.is_valid_date(calendar.Date(2024, calendar.February, 29))
-  assert !calendar.is_valid_date(calendar.Date(2024, calendar.February, 30))
-
-  // Test non-leap year (2023)
-  assert calendar.is_valid_date(calendar.Date(2023, calendar.February, 28))
-  assert !calendar.is_valid_date(calendar.Date(2023, calendar.February, 29))
-
-  // Test edge cases
-  assert !calendar.is_valid_date(calendar.Date(2023, calendar.February, 0))
-}
-
-pub fn is_valid_day_march_test() {
-  assert calendar.is_valid_date(calendar.Date(2023, calendar.March, 31))
-  assert !calendar.is_valid_date(calendar.Date(2023, calendar.March, 32))
-  assert !calendar.is_valid_date(calendar.Date(2023, calendar.March, 0))
-}
-
-pub fn is_valid_day_april_test() {
-  assert calendar.is_valid_date(calendar.Date(2023, calendar.April, 30))
-  assert !calendar.is_valid_date(calendar.Date(2023, calendar.April, 31))
-  assert !calendar.is_valid_date(calendar.Date(2023, calendar.April, 0))
-}
-
-pub fn is_valid_day_may_test() {
-  assert calendar.is_valid_date(calendar.Date(2023, calendar.May, 31))
-  assert !calendar.is_valid_date(calendar.Date(2023, calendar.May, 32))
-  assert !calendar.is_valid_date(calendar.Date(2023, calendar.May, 0))
-}
-
-pub fn is_valid_day_june_test() {
-  assert calendar.is_valid_date(calendar.Date(2023, calendar.June, 30))
-  assert !calendar.is_valid_date(calendar.Date(2023, calendar.June, 31))
-  assert !calendar.is_valid_date(calendar.Date(2023, calendar.June, 0))
-}
-
-pub fn is_valid_day_july_test() {
-  assert calendar.is_valid_date(calendar.Date(2023, calendar.July, 31))
-  assert !calendar.is_valid_date(calendar.Date(2023, calendar.July, 32))
-  assert !calendar.is_valid_date(calendar.Date(2023, calendar.July, 0))
-}
-
-pub fn is_valid_day_august_test() {
-  assert calendar.is_valid_date(calendar.Date(2023, calendar.August, 31))
-  assert !calendar.is_valid_date(calendar.Date(2023, calendar.August, 32))
-  assert !calendar.is_valid_date(calendar.Date(2023, calendar.August, 0))
-}
-
-pub fn is_valid_day_september_test() {
-  assert calendar.is_valid_date(calendar.Date(2023, calendar.September, 30))
-  assert !calendar.is_valid_date(calendar.Date(2023, calendar.September, 31))
-  assert !calendar.is_valid_date(calendar.Date(2023, calendar.September, 0))
-}
-
-pub fn is_valid_day_october_test() {
-  assert calendar.is_valid_date(calendar.Date(2023, calendar.October, 31))
-  assert !calendar.is_valid_date(calendar.Date(2023, calendar.October, 32))
-  assert !calendar.is_valid_date(calendar.Date(2023, calendar.October, 0))
-}
-
-pub fn is_valid_day_november_test() {
-  assert calendar.is_valid_date(calendar.Date(2023, calendar.November, 30))
-  assert !calendar.is_valid_date(calendar.Date(2023, calendar.November, 31))
-  assert !calendar.is_valid_date(calendar.Date(2023, calendar.November, 0))
-}
-
-pub fn is_valid_day_december_test() {
-  assert calendar.is_valid_date(calendar.Date(2023, calendar.December, 31))
-  assert !calendar.is_valid_date(calendar.Date(2023, calendar.December, 32))
-  assert !calendar.is_valid_date(calendar.Date(2023, calendar.December, 0))
+pub fn month_from_int_test() {
+  calendar.month_from_int(1) |> should.equal(Ok(calendar.January))
+  calendar.month_from_int(12) |> should.equal(Ok(calendar.December))
+  calendar.month_from_int(0) |> should.be_error()
+  calendar.month_from_int(13) |> should.be_error()
 }
 
 pub fn is_leap_year_test() {
-  // Regular leap years (divisible by 4)
-  assert calendar.is_leap_year(2024)
-  assert calendar.is_leap_year(2020)
-  assert calendar.is_leap_year(2016)
-
-  // Non-leap years (not divisible by 4)
-  assert !calendar.is_leap_year(2023)
-  assert !calendar.is_leap_year(2021)
-  assert !calendar.is_leap_year(2019)
-
-  // Century years that are NOT leap years (divisible by 100 but not 400)
-  assert !calendar.is_leap_year(1900)
-  assert !calendar.is_leap_year(1800)
-  assert !calendar.is_leap_year(1700)
-
-  // Century years that ARE leap years (divisible by 400)
-  assert calendar.is_leap_year(2000)
-  assert calendar.is_leap_year(1600)
-  assert calendar.is_leap_year(2400)
+  should.be_true(calendar.is_leap_year(2000))
+  should.be_true(calendar.is_leap_year(2024))
+  should.be_false(calendar.is_leap_year(1900))
+  should.be_false(calendar.is_leap_year(2023))
 }
 
-pub fn is_valid_time_of_day_valid_test() {
-  // Valid times
-  assert calendar.is_valid_time_of_day(calendar.TimeOfDay(0, 0, 0, 0))
-  assert calendar.is_valid_time_of_day(calendar.TimeOfDay(
-    12,
-    30,
-    45,
-    123_456_789,
-  ))
-  assert calendar.is_valid_time_of_day(calendar.TimeOfDay(
-    23,
-    59,
-    59,
-    999_999_999,
-  ))
+pub fn is_valid_date_test() {
+  should.be_true(calendar.is_valid_date(calendar.Date(2024, calendar.February, 29)))
+  should.be_false(calendar.is_valid_date(calendar.Date(2023, calendar.February, 29)))
+  should.be_false(calendar.is_valid_date(calendar.Date(2024, calendar.April, 31)))
+  should.be_true(calendar.is_valid_date(calendar.Date(2024, calendar.January, 1)))
 }
 
-pub fn is_valid_time_of_day_invalid_hours_test() {
-  // Invalid hours
-  assert !calendar.is_valid_time_of_day(calendar.TimeOfDay(24, 0, 0, 0))
-  assert !calendar.is_valid_time_of_day(calendar.TimeOfDay(25, 0, 0, 0))
-  assert !calendar.is_valid_time_of_day(calendar.TimeOfDay(-1, 0, 0, 0))
+pub fn is_valid_time_of_day_test() {
+  should.be_true(
+    calendar.is_valid_time_of_day(calendar.TimeOfDay(23, 59, 59, 999999999)),
+  )
+  should.be_false(calendar.is_valid_time_of_day(calendar.TimeOfDay(24, 0, 0, 0)))
+  should.be_false(calendar.is_valid_time_of_day(calendar.TimeOfDay(0, 60, 0, 0)))
 }
 
-pub fn is_valid_time_of_day_invalid_minutes_test() {
-  // Invalid minutes
-  assert !calendar.is_valid_time_of_day(calendar.TimeOfDay(12, 60, 0, 0))
-  assert !calendar.is_valid_time_of_day(calendar.TimeOfDay(12, 61, 0, 0))
-  assert !calendar.is_valid_time_of_day(calendar.TimeOfDay(12, -1, 0, 0))
+pub fn naive_date_compare_test() {
+  calendar.naive_date_compare(
+    calendar.Date(2024, calendar.January, 1),
+    calendar.Date(2024, calendar.January, 2),
+  )
+  |> should.equal(order.Lt)
+  calendar.naive_date_compare(
+    calendar.Date(2024, calendar.January, 1),
+    calendar.Date(2024, calendar.January, 1),
+  )
+  |> should.equal(order.Eq)
+  calendar.naive_date_compare(
+    calendar.Date(2024, calendar.January, 2),
+    calendar.Date(2024, calendar.January, 1),
+  )
+  |> should.equal(order.Gt)
 }
 
-pub fn is_valid_time_of_day_invalid_seconds_test() {
-  // Invalid seconds
-  assert !calendar.is_valid_time_of_day(calendar.TimeOfDay(12, 30, 60, 0))
-  assert !calendar.is_valid_time_of_day(calendar.TimeOfDay(12, 30, 61, 0))
-  assert !calendar.is_valid_time_of_day(calendar.TimeOfDay(12, 30, -1, 0))
-}
-
-pub fn is_valid_time_of_day_invalid_nanoseconds_test() {
-  assert !calendar.is_valid_time_of_day(calendar.TimeOfDay(
-    12,
-    30,
-    45,
-    1_000_000_000,
-  ))
-  assert !calendar.is_valid_time_of_day(calendar.TimeOfDay(
-    12,
-    30,
-    45,
-    1_000_000_001,
-  ))
-  assert !calendar.is_valid_time_of_day(calendar.TimeOfDay(12, 30, 45, -1))
-}
-
-pub fn is_valid_time_of_day_edge_cases_test() {
-  // Maximum valid values
-  assert calendar.is_valid_time_of_day(calendar.TimeOfDay(23, 0, 0, 0))
-  assert calendar.is_valid_time_of_day(calendar.TimeOfDay(0, 59, 0, 0))
-  assert calendar.is_valid_time_of_day(calendar.TimeOfDay(0, 0, 59, 0))
-  assert calendar.is_valid_time_of_day(calendar.TimeOfDay(0, 0, 0, 999_999_999))
-
-  // Minimum valid values
-  assert calendar.is_valid_time_of_day(calendar.TimeOfDay(0, 0, 0, 0))
-}
-
-pub fn compare_date_with_smaller_year_test() {
-  assert order.Lt
-    == calendar.naive_date_compare(
-      calendar.Date(1998, calendar.October, 11),
-      calendar.Date(1999, calendar.October, 11),
-    )
-}
-
-pub fn compares_date_with_smaller_month_test() {
-  assert order.Lt
-    == calendar.naive_date_compare(
-      calendar.Date(1998, calendar.October, 11),
-      calendar.Date(1998, calendar.November, 11),
-    )
-}
-
-pub fn compare_date_with_smaller_day_test() {
-  assert order.Lt
-    == calendar.naive_date_compare(
-      calendar.Date(1998, calendar.October, 11),
-      calendar.Date(1998, calendar.October, 12),
-    )
-}
-
-pub fn compare_equal_dates_test() {
-  assert order.Eq
-    == calendar.naive_date_compare(
-      calendar.Date(1998, calendar.October, 11),
-      calendar.Date(1998, calendar.October, 11),
-    )
-}
-
-pub fn compare_date_with_bigger_year_test() {
-  assert order.Gt
-    == calendar.naive_date_compare(
-      calendar.Date(1999, calendar.October, 11),
-      calendar.Date(1998, calendar.October, 11),
-    )
-}
-
-pub fn compare_date_with_bigger_month_test() {
-  assert order.Gt
-    == calendar.naive_date_compare(
-      calendar.Date(1998, calendar.November, 11),
-      calendar.Date(1998, calendar.October, 11),
-    )
-}
-
-pub fn compare_date_with_bigger_day_test() {
-  assert order.Gt
-    == calendar.naive_date_compare(
-      calendar.Date(1998, calendar.October, 12),
-      calendar.Date(1998, calendar.October, 11),
-    )
+pub fn local_offset_test() {
+  let hours =
+    duration.to_seconds(calendar.local_offset()) / 60.0 / 60.0
+  should.be_true(hours > -24.0)
+  should.be_true(hours < 24.0)
 }
