@@ -29,18 +29,30 @@ pub fn is_leap_year_test() {
 }
 
 pub fn is_valid_date_test() {
-  should.be_true(calendar.is_valid_date(calendar.Date(2024, calendar.February, 29)))
-  should.be_false(calendar.is_valid_date(calendar.Date(2023, calendar.February, 29)))
-  should.be_false(calendar.is_valid_date(calendar.Date(2024, calendar.April, 31)))
-  should.be_true(calendar.is_valid_date(calendar.Date(2024, calendar.January, 1)))
+  should.be_true(
+    calendar.is_valid_date(calendar.Date(2024, calendar.February, 29)),
+  )
+  should.be_false(
+    calendar.is_valid_date(calendar.Date(2023, calendar.February, 29)),
+  )
+  should.be_false(
+    calendar.is_valid_date(calendar.Date(2024, calendar.April, 31)),
+  )
+  should.be_true(
+    calendar.is_valid_date(calendar.Date(2024, calendar.January, 1)),
+  )
 }
 
 pub fn is_valid_time_of_day_test() {
   should.be_true(
-    calendar.is_valid_time_of_day(calendar.TimeOfDay(23, 59, 59, 999999999)),
+    calendar.is_valid_time_of_day(calendar.TimeOfDay(23, 59, 59, 999_999_999)),
   )
-  should.be_false(calendar.is_valid_time_of_day(calendar.TimeOfDay(24, 0, 0, 0)))
-  should.be_false(calendar.is_valid_time_of_day(calendar.TimeOfDay(0, 60, 0, 0)))
+  should.be_false(
+    calendar.is_valid_time_of_day(calendar.TimeOfDay(24, 0, 0, 0)),
+  )
+  should.be_false(
+    calendar.is_valid_time_of_day(calendar.TimeOfDay(0, 60, 0, 0)),
+  )
 }
 
 pub fn naive_date_compare_test() {
@@ -62,8 +74,7 @@ pub fn naive_date_compare_test() {
 }
 
 pub fn local_offset_test() {
-  let hours =
-    duration.to_seconds(calendar.local_offset()) / 60.0 / 60.0
-  should.be_true(hours > -24.0)
-  should.be_true(hours < 24.0)
+  let hours = duration.to_seconds(calendar.local_offset()) /. 60.0 /. 60.0
+  should.be_true(hours >. -24.0)
+  should.be_true(hours <. 24.0)
 }
