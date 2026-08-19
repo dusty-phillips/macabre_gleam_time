@@ -1,4 +1,4 @@
-name = "macabre_gleam_time"
+name = "gleam_time"
 version = "1.8.0"
 description = "Clock and calendar functionality (macabre python-target port of gleam_time)"
 
